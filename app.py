@@ -289,29 +289,76 @@ elif menu == "Preprocessing":
         - Ada_diskon → 1 (ya), 0 (tidak)
     - Tujuan: agar bisa diproses oleh model machine learning
     """)
+
 # =========================
 # TRAINING
 # =========================
 elif menu == "Training":
     st.header("Model Training Info")
-    st.write(f"Total data diproses: **{STATS['total_produk']}** baris")
-        
-        # Tambahan Metrik Performa 
+    st.write("Bagian ini menampilkan performa AI setelah mempelajari dataset Tokopedia yang diberikan.")
+    
+    # 1. Metrik Utama dalam Kolom
     col1, col2, col3 = st.columns(3)
-    col1.metric("Akurasi Model", "84.2%") 
-    col2.metric("ROC-AUC Score", "0.889") 
+    
+    train_acc = STATS.get('train_accuracy', 0)
+    test_acc = STATS.get('test_accuracy', 0)
+    
+    col1.metric("Akurasi Training (Belajar)", f"{train_acc * 100:.1f}%")
+    col2.metric("Akurasi Testing (Ujian)", f"{test_acc * 100:.1f}%")
     col3.metric("Batas Best Seller", f"{THRESHOLD:,.0f} pcs")
-        
-    st.subheader("Distribusi Target")
+
+    st.markdown("---")
+
+    # 2. Visualisasi Evaluasi Performa
+    st.subheader("Evaluasi Performa Model")
+    st.write("Grafik perbandingan akurasi saat tahap belajar dan tahap pengujian data baru.")
+
+    import plotly.express as px
+    
+    df_eval = pd.DataFrame({
+        "Tahap": ["Belajar (Training)", "Ujian (Testing)"],
+        "Akurasi": [train_acc, test_acc]
+    })
+
+    fig_eval = px.bar(
+        df_eval, 
+        x="Tahap", 
+        y="Akurasi", 
+        color="Tahap",
+        text=[f"{train_acc*100:.1f}%", f"{test_acc*100:.1f}%"],
+        color_discrete_map={"Belajar (Training)": "#94a3b8", "Ujian (Testing)": "#3b82f6"}
+    )
+    fig_eval.update_layout(yaxis_range=[0, 1], showlegend=False)
+    fig_eval.update_traces(textposition='outside')
+    st.plotly_chart(fig_eval, use_container_width=True)
+
+    # 3. Analisis Teknis
+    gap = (train_acc - test_acc) * 100
+    if gap > 10:
+        st.warning(f"Catatan Analisis: Terdeteksi selisih akurasi sebesar {gap:.1f}%. Ini menunjukkan model sedikit Overfitting. Model sangat mengenali data lama, namun performanya sedikit menurun pada data baru. Meskipun begitu, akurasi {test_acc*100:.1f}% masih cukup solid untuk prediksi pasar.")
+    else:
+        st.success(f"Catatan Analisis: Model memiliki performa yang stabil antara tahap belajar dan ujian dengan selisih {gap:.1f}%.")
+
+    st.markdown("---")
+
+    # 4. Distribusi Data
+    st.subheader("Distribusi Data")
     rasio = STATS['bestseller_rate'] * 100
-    st.write(f"- **Best Seller (1)**: {rasio:.1f}%")
-    st.write(f"- **Biasa (0)**: {100 - rasio:.1f}%")
+    st.write(f"Dari total {STATS['total_produk']} produk yang dianalisis, sebanyak {rasio:.1f}% masuk kategori Best Seller.")
     st.progress(int(rasio))
 
-    st.subheader("Feature Importances")
+    st.markdown("---")
+
+    # 5. Fitur yang Paling Berpengaruh
+    st.subheader("Fitur Paling Berpengaruh")
+    st.write("Faktor-faktor utama yang digunakan AI untuk menentukan potensi kesuksesan sebuah produk.")
+    
     df_imp = pd.DataFrame(list(IMPORTANCES.items()), columns=['Fitur', 'Kepentingan']).set_index('Fitur')
-    df_imp = df_imp.sort_values(by='Kepentingan', ascending=False)
-    st.bar_chart(df_imp)
+    df_imp = df_imp.sort_values(by='Kepentingan', ascending=True)
+    
+    fig_imp = px.bar(df_imp, orientation='h', color_discrete_sequence=['#3b82f6'])
+    fig_imp.update_layout(xaxis_title="Tingkat Kepentingan", yaxis_title="Fitur", showlegend=False)
+    st.plotly_chart(fig_imp, use_container_width=True)
 
 # =========================
 # RESULT 
