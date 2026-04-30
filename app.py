@@ -53,7 +53,15 @@ def set_ui_style():
 
     .stApp { background: #f8fafc; }
     #MainMenu, footer, header { visibility: hidden; }
-    .block-container { padding: 2rem 2.5rem 4rem !important; max-width: 1200px; }
+    
+    .block-container {
+        background-color: white;
+        padding: 2.5rem 3.5rem !important;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+        margin-top: 2rem;
+        max-width: 1100px;
+    }
 
     /* Sidebar */
     [data-testid="stSidebar"] {
@@ -89,29 +97,33 @@ def set_ui_style():
     }
     button[kind="primary"]:hover { background: var(--primary-700) !important; }
 
-    /* Cards & Layout */
+    /* Clean UI Overrides */
     .card {
-        background: var(--white); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
-        padding: 1.5rem 2rem; margin-bottom: 1.5rem; border: 1px solid var(--gray-200);
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
+        margin-bottom: 2.5rem;
     }
+    
     .section-title {
-        font-size: 1rem; font-weight: 600; color: var(--gray-900);
-        margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem;
+        font-size: 1.1rem; font-weight: 700; color: var(--gray-900);
+        margin-bottom: 1.2rem; display: flex; align-items: center; gap: .5rem;
     }
     .section-title::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
 
     /* Progress Step Bar */
-    .step-bar { display: flex; gap: .5rem; margin-bottom: 1.5rem; }
-    .step-item { flex: 1; padding: 8px; border-radius: var(--radius-sm); text-align: center; font-size: .75rem; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; }
+    .step-bar { display: flex; gap: .5rem; margin-bottom: 2rem; }
+    .step-item { flex: 1; padding: 10px; border-radius: var(--radius-sm); text-align: center; font-size: .75rem; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; }
     .step-done    { background: var(--primary-50); color: var(--primary-700); border: 1px solid var(--primary-100); }
     .step-active  { background: var(--primary-600); color: white; }
     .step-pending { background: var(--gray-50);  color: var(--gray-400); border: 1px solid var(--gray-100); }
 
     /* Info Boxes for Explanations */
-    .info-box { background: #f8fafc; border-left: 4px solid var(--primary-500); padding: 1rem; font-size: 0.9rem; color: var(--gray-600); margin-top: 0.5rem; border-radius: 0 8px 8px 0; }
-    .warn-box { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 1rem; font-size: 0.9rem; color: #92400e; margin-bottom: 1.5rem;}
+    .info-box { background: #f8fafc; border-left: 4px solid var(--primary-500); padding: 1rem 1.2rem; font-size: 0.95rem; color: var(--gray-600); margin-top: 1rem; border-radius: 0 8px 8px 0; line-height: 1.5; }
+    .warn-box { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 1rem 1.2rem; font-size: 0.95rem; color: #92400e; margin-bottom: 1.5rem; }
     
-    .pred-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 2rem; text-align: center; }
+    .pred-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 2.5rem; text-align: center; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -179,55 +191,58 @@ def load_and_clean_data():
     return df, THRESHOLD
 
 # ─────────────────────────────────────────────
-# 2. HOME (Dirapikan & Ruang Kosong Dihapus)
+# 2. HOME
 # ─────────────────────────────────────────────
 def show_home():
+    
+    # --- HEADER / HERO SECTION ---
     st.markdown("""
-    <div style="padding: 1rem 0 2rem;">
-      <h1 style="margin:0;font-size:2.2rem;font-weight:700;color:#111827;">
-        Machine Learning Pipeline
-      </h1>
-      <p style="color:#6b7280;font-size:1.1rem;font-weight:400;margin-top:0.5rem;">
-        Prediksi Penjualan Produk E-Commerce (Studi Kasus: Tokopedia)
-      </p>
+    <div style="background-color: #ffffff; padding: 2.5rem 0; border-bottom: 4px solid #16a34a; margin-bottom: 2.5rem;">
+        <h1 style="margin: 0; font-size: 2.4rem; font-weight: 800; color: #111827; letter-spacing: -0.02em;">Machine Learning Pipeline</h1>
+        <p style="margin: 0.5rem 0 0; font-size: 1.15rem; font-weight: 400; color: #4b5563;">Prediksi Penjualan Produk E-Commerce (Studi Kasus: Tokopedia)</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Card 1: Deskripsi & Tujuan (Full Width)
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">Latar Belakang & Tujuan Proyek</div>', unsafe_allow_html=True)
-    st.write("Aplikasi ini merupakan simulasi dari *End-to-End Machine Learning Pipeline* untuk menganalisis dan memprediksi performa penjualan produk. Berbeda dengan sekadar visualisasi data, sistem ini memfasilitasi ekstraksi fitur dari teks kotor, pemrosesan awal (preprocessing), hingga pelatihan algoritma secara interaktif (AutoML).")
-    st.write("Tujuan utama sistem ini adalah membantu pengambilan keputusan bisnis dengan mengklasifikasikan apakah suatu produk memiliki potensi untuk menjadi **Best Seller** berdasarkan spesifikasi harga, rating, ulasan, dan metrik lainnya.")
-    st.markdown('</div>', unsafe_allow_html=True)
+    # --- SECTION 1: LATAR BELAKANG ---
+    st.markdown("""
+    <div style="padding: 2rem; background: #fafafa; border-radius: 12px; border-left: 6px solid #16a34a; margin-bottom: 2rem;">
+        <h2 style="margin-top: 0; font-size: 1.3rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">Latar Belakang & Tujuan Proyek</h2>
+        <p style="color: #4b5563; line-height: 1.6; margin-bottom: 1rem;">Aplikasi ini merupakan simulasi dari <b>End-to-End Machine Learning Pipeline</b> untuk menganalisis dan memprediksi performa penjualan produk. Sistem ini memfasilitasi ekstraksi fitur dari teks kotor, pemrosesan awal (preprocessing), hingga pelatihan algoritma secara interaktif (AutoML).</p>
+        <p style="color: #4b5563; line-height: 1.6; margin: 0;">Tujuan utama sistem ini adalah membantu pengambilan keputusan bisnis dengan mengklasifikasikan apakah suatu produk memiliki potensi untuk menjadi <b>Best Seller</b> berdasarkan spesifikasi harga, rating, ulasan, dan metrik lainnya.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # Card 2 & 3: Target & Alur (Berdampingan dengan Natural Height)
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.markdown('<div class="card" style="height: 100%;">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">Definisi Variabel Target</div>', unsafe_allow_html=True)
-        st.markdown("""
-        Sistem ini menggunakan pendekatan **Klasifikasi Biner (Binary Classification)**:
-        <br><br>
-        <b>1 (Best Seller)</b><br>
-        Volume penjualan produk berada pada persentil atas (Top 25% pasar). Menandakan produk yang sangat diminati konsumen.
-        <br><br>
-        <b>0 (Reguler)</b><br>
-        Volume penjualan reguler atau berada di bawah ambang batas (threshold) rata-rata pasar.
-        """, unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+    # --- SECTION 2: DEFINISI TARGET ---
+    st.markdown("""
+    <div style="padding: 2rem; background: #fafafa; border-radius: 12px; border-left: 6px solid #22c55e; margin-bottom: 2rem;">
+        <h2 style="margin-top: 0; font-size: 1.3rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">Definisi Variabel Target</h2>
+        <p style="color: #4b5563; line-height: 1.6; margin-bottom: 1.2rem;">Sistem ini menggunakan pendekatan <b>Klasifikasi Biner (Binary Classification)</b>:</p>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="background: #ffffff; padding: 1.2rem; border-radius: 8px; border: 1px solid #dcfce7;">
+                <strong style="color: #15803d; font-size: 1.1rem;">1 (Best Seller)</strong><br>
+                <span style="color: #4b5563; font-size: 0.95rem;">Volume penjualan produk berada pada persentil atas (Top 25% pasar). Menandakan produk yang sangat diminati konsumen.</span>
+            </div>
+            <div style="background: #ffffff; padding: 1.2rem; border-radius: 8px; border: 1px solid #f3f4f6;">
+                <strong style="color: #374151; font-size: 1.1rem;">0 (Reguler)</strong><br>
+                <span style="color: #4b5563; font-size: 0.95rem;">Volume penjualan reguler atau berada di bawah ambang batas (threshold) rata-rata pasar.</span>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    with col_b:
-        st.markdown('<div class="card" style="height: 100%;">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">Alur Sistem (Workflow)</div>', unsafe_allow_html=True)
-        st.markdown("""
-        Navigasi sistem dirancang berurutan mengikuti standar industri:
-        1. **Exploratory Data Analysis (EDA)**: Eksplorasi statistik dan korelasi data.
-        2. **Preprocessing**: Pemisahan data (Splitting) dan normalisasi (Scaling).
-        3. **Model Training**: Pelatihan algoritma *Machine Learning*.
-        4. **Evaluation**: Pengukuran akurasi dan kinerja model.
-        5. **Testing**: Simulasi produk baru (Data Inference).
-        """, unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+    # --- SECTION 3: ALUR SISTEM ---
+    st.markdown("""
+    <div style="padding: 2rem; background: #fafafa; border-radius: 12px; border-left: 6px solid #4ade80; margin-bottom: 2rem;">
+        <h2 style="margin-top: 0; font-size: 1.3rem; font-weight: 700; color: #111827; margin-bottom: 1.2rem;">Alur Sistem (Workflow)</h2>
+        <div style="display: flex; flex-direction: column; gap: 0.8rem; color: #4b5563;">
+            <div><b style="color: #111827;">1. EDA (Exploratory Data Analysis)</b> — Eksplorasi data dan analisis awal</div>
+            <div><b style="color: #111827;">2. Preprocessing</b> — Cleaning, splitting, dan scaling data</div>
+            <div><b style="color: #111827;">3. Model Training</b> — Melatih model Machine Learning</div>
+            <div><b style="color: #111827;">4. Evaluation</b> — Mengukur performa model</div>
+            <div><b style="color: #111827;">5. Testing</b> — Prediksi data simulasi bisnis</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 # 3. EDA & FEATURE SELECTION
@@ -277,7 +292,7 @@ def show_eda():
         fig_u = px.box(df, x=df['is_bestseller'].astype(str), y=uni_feat, color=df['is_bestseller'].astype(str),
                        color_discrete_map={"0":"#94a3b8","1":"#16a34a"}, labels={'x':'Kelas Target'})
         st.plotly_chart(fig_u, use_container_width=True)
-        st.markdown('<div class="info-box"><b>Interpretasi Boxplot:</b> Grafik ini sangat berguna untuk melihat rentang nilai median (garis tengah kotak) serta mengidentifikasi keberadaan *outlier* (titik-titik di luar batas kumis/whisker). Perbedaan posisi kotak antar kelas menunjukkan fitur ini berpengaruh terhadap target.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="info-box"><b>Interpretasi Boxplot:</b> Grafik ini berguna untuk melihat nilai median serta mengidentifikasi keberadaan *outlier*. Perbedaan posisi kotak antar kelas menunjukkan bahwa fitur ini mungkin berpengaruh kuat terhadap target klasifikasi.</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     # Bivariate
@@ -290,7 +305,7 @@ def show_eda():
     fig_b = px.scatter(df, x=sumbu_x, y=sumbu_y, color=df['is_bestseller'].astype(str),
                        color_discrete_map={"0":"#cbd5e1","1":"#16a34a"}, opacity=0.7)
     st.plotly_chart(fig_b, use_container_width=True)
-    st.markdown('<div class="info-box"><b>Interpretasi Scatter Plot:</b> Membantu memvisualisasikan korelasi atau pola hubungan antara dua variabel secara simultan. Jika titik-titik hijau (Best Seller) membentuk klaster di area tertentu, ini menunjukkan adanya pola kuat yang dapat dipelajari oleh model klasifikasi.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="info-box"><b>Interpretasi Scatter Plot:</b> Membantu memvisualisasikan korelasi atau pola hubungan antara dua variabel. Jika titik-titik hijau (Best Seller) membentuk klaster di area tertentu, ini menunjukkan adanya pola kuat yang dapat dipelajari oleh model.</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     # Heatmap
@@ -299,7 +314,7 @@ def show_eda():
     corr = df[num_cols + ['is_bestseller']].corr()
     fig_h = px.imshow(corr, text_auto=".2f", aspect="auto", color_continuous_scale='Greens')
     st.plotly_chart(fig_h, use_container_width=True)
-    st.markdown('<div class="info-box"><b>Interpretasi Heatmap Korelasi:</b> Angka yang mendekati 1.00 atau -1.00 menandakan korelasi linear yang kuat. Variabel yang memiliki korelasi tinggi terhadap "is_bestseller" adalah fitur yang paling krusial. Sebaliknya, dua variabel independen yang saling berkorelasi tinggi (mendekati 1.00) dapat menyebabkan *Multikolinearitas*.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="info-box"><b>Interpretasi Heatmap Korelasi:</b> Angka yang mendekati 1.00 atau -1.00 menandakan korelasi linear yang kuat. Variabel yang memiliki korelasi tinggi terhadap "is_bestseller" adalah fitur yang paling krusial.</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     # Feature Selection
@@ -452,37 +467,36 @@ def show_evaluation():
         report = classification_report(y_test, y_pred, target_names=["Reguler", "Best Seller"], output_dict=True)
         st.dataframe(pd.DataFrame(report).transpose().style.format(precision=3), use_container_width=True)
         st.markdown('<div class="info-box"><b>Interpretasi Metrik:</b> <b>Precision</b> mengukur akurasi prediksi positif, <b>Recall</b> mengukur kemampuan model menemukan semua data positif, dan <b>F1-Score</b> adalah keseimbangan antara keduanya. Gunakan akurasi keseluruhan secara hati-hati jika proporsi data tidak seimbang.</div>', unsafe_allow_html=True)
-        st.markdown("<br>", unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
     if "Confusion Matrix" in eval_options:
         with col1:
-            st.markdown('<div class="section-title">Matriks Kebingungan (Confusion Matrix)</div>', unsafe_allow_html=True)
+            st.markdown('<br><div class="section-title">Matriks Kebingungan (Confusion Matrix)</div>', unsafe_allow_html=True)
             cm = confusion_matrix(y_test, y_pred)
             fig_cm = px.imshow(cm, text_auto=True, color_continuous_scale='Greens', x=["Reguler", "Best Seller"], y=["Reguler", "Best Seller"])
             st.plotly_chart(fig_cm, use_container_width=True)
-            st.markdown('<div class="info-box"><b>Interpretasi:</b> Diagonal utama (kiri atas ke kanan bawah) adalah jumlah prediksi yang tepat (True Positives & True Negatives). Kotak di luar diagonal menunjukkan jumlah prediksi yang meleset (False Positives & False Negatives).</div>', unsafe_allow_html=True)
+            st.markdown('<div class="info-box"><b>Interpretasi:</b> Diagonal utama adalah prediksi yang tepat (True Positives & Negatives). Kotak di luar diagonal menunjukkan jumlah prediksi yang meleset.</div>', unsafe_allow_html=True)
 
     if "ROC-AUC Curve" in eval_options:
         with col2:
-            st.markdown('<div class="section-title">Kurva ROC-AUC</div>', unsafe_allow_html=True)
+            st.markdown('<br><div class="section-title">Kurva ROC-AUC</div>', unsafe_allow_html=True)
             fpr, tpr, _ = roc_curve(y_test, y_proba)
             fig_roc = go.Figure(go.Scatter(x=fpr, y=tpr, mode='lines', fill='tozeroy', name=f"AUC = {auc(fpr, tpr):.3f}", line=dict(color="#16a34a")))
-            fig_roc.add_shape(type='line', dash='dash', x0=0, x1=1, y0=0, y1=1, line=dict(color="gray"))
+            fig_roc.add_shape(type='line', x0=0, x1=1, y0=0, y1=1, line=dict(color="gray", dash="dash"))
             st.plotly_chart(fig_roc, use_container_width=True)
-            st.markdown('<div class="info-box"><b>Interpretasi:</b> Semakin kurva hijau melengkung ke arah sudut kiri atas (AUC mendekati 1.00), semakin baik model dalam membedakan antara produk Best Seller dan Reguler. Nilai AUC 0.50 menandakan tebakan acak.</div>', unsafe_allow_html=True)
+            st.markdown('<div class="info-box"><b>Interpretasi:</b> Semakin kurva hijau melengkung ke arah sudut kiri atas (AUC mendekati 1.00), semakin baik model dalam membedakan antara kedua kelas.</div>', unsafe_allow_html=True)
 
     if "Feature Importance" in eval_options and st.session_state['model_name'] in ["Random Forest", "XGBoost"]:
-        st.markdown('<div class="section-title">Signifikansi Variabel (Feature Importance)</div>', unsafe_allow_html=True)
+        st.markdown('<br><div class="section-title">Signifikansi Variabel (Feature Importance)</div>', unsafe_allow_html=True)
         importances = model.feature_importances_
         df_imp = pd.DataFrame({"Fitur": X_test.columns, "Kepentingan": importances}).sort_values(by="Kepentingan", ascending=True)
         fig_imp = px.bar(df_imp, x="Kepentingan", y="Fitur", orientation='h', color_discrete_sequence=['#16a34a'])
         st.plotly_chart(fig_imp, use_container_width=True)
-        st.markdown('<div class="info-box"><b>Interpretasi:</b> Menampilkan kontribusi tiap variabel independen. Semakin panjang batang suatu fitur, semakin besar pengaruh/bobotnya dalam keputusan klasifikasi yang dilakukan oleh algoritma.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="info-box"><b>Interpretasi:</b> Menampilkan kontribusi tiap variabel. Semakin panjang batang suatu fitur, semakin besar bobotnya dalam keputusan klasifikasi yang dilakukan oleh algoritma.</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# 7. TESTING (SIMULASI)
+# 7. TESTING (SIMULASI) 
 # ─────────────────────────────────────────────
 def show_testing():
     st.title("Testing & Simulation")
@@ -493,23 +507,41 @@ def show_testing():
         return
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">Input Parameter Simulasi Produk Baru</div>', unsafe_allow_html=True)
-    
-    X_train_cols = st.session_state['preprocessed_data']['X_train'].columns
-    user_inputs = {}
+    st.markdown('<div class="section-title">Input Spesifikasi Produk Dasar</div>', unsafe_allow_html=True)
+    st.write("Sistem akan secara otomatis melakukan kalkulasi *Feature Engineering* (seperti Skor Kepercayaan dan Harga Setelah Diskon) berdasarkan 4 input di bawah ini.")
     
     col1, col2 = st.columns(2)
-    for i, col in enumerate(X_train_cols):
-        with (col1 if i % 2 == 0 else col2):
-            if col == "Rating": user_inputs[col] = st.slider(col, 0.0, 5.0, 4.5, 0.1)
-            elif col == "Diskon (%)": user_inputs[col] = st.slider(col, 0, 100, 10)
-            elif col == "Ada_diskon": user_inputs[col] = st.selectbox(col, [0, 1])
-            elif "Harga" in col: user_inputs[col] = st.number_input(col, min_value=1000, value=150000, step=5000)
-            elif "Ulasan" in col: user_inputs[col] = st.number_input(col, min_value=0, value=100, step=10)
-            else: user_inputs[col] = st.number_input(col, value=1000.0)
+    with col1:
+        input_harga = st.number_input("Harga Dasar (IDR)", min_value=1000, value=150000, step=5000)
+        input_diskon = st.slider("Persentase Diskon (%)", 0, 100, 10)
+    with col2:
+        input_rating = st.slider("Rating Produk", 0.0, 5.0, 4.8, 0.1)
+        input_ulasan = st.number_input("Jumlah Ulasan Pembeli", min_value=0, value=150, step=10)
 
-    if st.button("Lakukan Prediksi", type="primary", use_container_width=True):
-        input_df = pd.DataFrame([user_inputs])
+    if st.button("Lakukan Prediksi AI", type="primary", use_container_width=True):
+        
+        # 1. Kalkulasi Engineered Features (Otomatis di balik layar)
+        harga_diskon = input_harga * (1 - input_diskon / 100)
+        ada_diskon = 1 if input_diskon > 0 else 0
+        skor_kepercayaan = input_rating * input_ulasan
+        
+        # 2. Tampung ke dalam Master Dictionary
+        all_inputs = {
+            'Harga (IDR)': input_harga,
+            'Diskon (%)': input_diskon,
+            'Rating': input_rating,
+            'Ulasan_bersih': input_ulasan,
+            'Harga_setelah_diskon': harga_diskon,
+            'Ada_diskon': ada_diskon,
+            'Skor_kepercayaan': skor_kepercayaan
+        }
+        
+        # 3. Filter input agar sesuai dengan variabel yang dipilih pengguna saat EDA (X_train)
+        X_train_cols = st.session_state['preprocessed_data']['X_train'].columns
+        final_input_dict = {col: all_inputs[col] for col in X_train_cols}
+        
+        # 4. Transformasi dan Prediksi
+        input_df = pd.DataFrame([final_input_dict])
         input_scaled = st.session_state['scaler'].transform(input_df)
         
         pred = st.session_state['trained_model'].predict(input_scaled)[0]
@@ -519,7 +551,7 @@ def show_testing():
         confidence = max(proba) * 100
         color = "#16a34a" if pred == 1 else "#4b5563"
         
-        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("<hr style='margin: 2rem 0; border: 1px solid #e5e7eb;'>", unsafe_allow_html=True)
         st.markdown(f"""
         <div class="pred-box">
             <h4 style="color: #64748b; font-weight: 500; margin-bottom: 0;">Hasil Klasifikasi Model</h4>
