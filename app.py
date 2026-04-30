@@ -52,7 +52,7 @@ def set_ui_style():
     * { font-family: 'Inter', sans-serif !important; }
 
     .stApp { background: #f8fafc; }
-    #MainMenu, footer, header { visibility: hidden; }
+    #MainMenu, footer { visibility: hidden; }
     
     .block-container {
         background-color: white;
@@ -496,7 +496,7 @@ def show_evaluation():
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# 7. TESTING (SIMULASI) 
+# 7. TESTING (SIMULASI) MENGGUNAKAN LOGIKA FEATURE ENGINEERING
 # ─────────────────────────────────────────────
 def show_testing():
     st.title("Testing & Simulation")
@@ -520,12 +520,10 @@ def show_testing():
 
     if st.button("Lakukan Prediksi AI", type="primary", use_container_width=True):
         
-        # 1. Kalkulasi Engineered Features (Otomatis di balik layar)
         harga_diskon = input_harga * (1 - input_diskon / 100)
         ada_diskon = 1 if input_diskon > 0 else 0
         skor_kepercayaan = input_rating * input_ulasan
         
-        # 2. Tampung ke dalam Master Dictionary
         all_inputs = {
             'Harga (IDR)': input_harga,
             'Diskon (%)': input_diskon,
@@ -536,11 +534,9 @@ def show_testing():
             'Skor_kepercayaan': skor_kepercayaan
         }
         
-        # 3. Filter input agar sesuai dengan variabel yang dipilih pengguna saat EDA (X_train)
         X_train_cols = st.session_state['preprocessed_data']['X_train'].columns
         final_input_dict = {col: all_inputs[col] for col in X_train_cols}
         
-        # 4. Transformasi dan Prediksi
         input_df = pd.DataFrame([final_input_dict])
         input_scaled = st.session_state['scaler'].transform(input_df)
         
