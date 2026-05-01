@@ -32,9 +32,10 @@ def set_ui_style():
     :root {
         --primary-50:  #f0fdf4;
         --primary-100: #dcfce7;
-        --primary-500: #22c55e;
-        --primary-600: #16a34a;
-        --primary-700: #15803d;
+        --primary-400: #42b549;
+        --primary-500: #03ac0e;
+        --primary-600: #02970c;
+        --primary-700: #027a0a;
         --gray-50:   #f9fafb;
         --gray-100:  #f3f4f6;
         --gray-200:  #e5e7eb;
@@ -65,37 +66,39 @@ def set_ui_style():
 
     /* Sidebar */
     [data-testid="stSidebar"] {
-        background: var(--white) !important;
-        border-right: 1px solid var(--gray-200) !important;
+        background: #f0fdf4 !important;
+        border-right: 1px solid var(--primary-500) !important;
     }
     
     div[role="radiogroup"] { gap: .2rem; display: flex; flex-direction: column; }
-    div[role="radiogroup"] > label > div:first-child { display: none !important; }
     div[role="radiogroup"] > label {
         padding: 10px 14px; border-radius: var(--radius-sm);
         transition: all .15s ease; cursor: pointer; width: 100%;
         border: 1px solid transparent;
     }
-    div[role="radiogroup"] > label:hover { background: var(--gray-50); }
-    div[role="radiogroup"] > label:has(input:checked) {
-        background: var(--primary-50) !important;
-        border-left: 3px solid var(--primary-600) !important;
-    }
+    div[role="radiogroup"] > label:hover { background: #dcfce7; }
     div[role="radiogroup"] > label p { font-size: 14px; font-weight: 500; color: var(--gray-600); margin: 0; }
-    div[role="radiogroup"] > label:has(input:checked) p { font-weight: 600 !important; color: var(--primary-700) !important; }
+    div[role="radiogroup"] > label:has(input:checked) {
+        background: #03AC0E !important;
+        border-left: 3px solid var(--primary-700) !important;
+    }
+    div[role="radiogroup"] > label:has(input:checked) p {
+        color: white !important;
+        font-weight: bold !important;
+    }
 
     [data-testid="stSidebar"] button {
-        background: transparent !important; border: 1px solid var(--gray-400) !important;
-        color: var(--gray-600) !important; border-radius: var(--radius-sm) !important;
+        background: transparent !important; border: 1px solid var(--primary-400) !important;
+        color: var(--primary-600) !important; border-radius: var(--radius-sm) !important;
         font-weight: 500 !important; font-size: 13px !important; transition: all .2s;
     }
-    [data-testid="stSidebar"] button:hover { background: var(--gray-100) !important; color: var(--gray-900) !important; }
-    
+    [data-testid="stSidebar"] button:hover { background: #dcfce7 !important; color: var(--primary-700) !important; }
+
     button[kind="primary"] {
-        background: var(--primary-600) !important; color: white !important; border: none !important;
+        background: var(--primary-500) !important; color: white !important; border: none !important;
         border-radius: var(--radius-sm) !important; font-weight: 500 !important; transition: all .2s !important;
     }
-    button[kind="primary"]:hover { background: var(--primary-700) !important; }
+    button[kind="primary"]:hover { background: var(--primary-600) !important; }
 
     /* Clean UI Overrides */
     .card {
@@ -104,6 +107,7 @@ def set_ui_style():
         box-shadow: none;
         padding: 0;
         margin-bottom: 2.5rem;
+        border: 1px solid var(--primary-500);
     }
     
     .section-title {
@@ -115,15 +119,16 @@ def set_ui_style():
     /* Progress Step Bar */
     .step-bar { display: flex; gap: .5rem; margin-bottom: 2rem; }
     .step-item { flex: 1; padding: 10px; border-radius: var(--radius-sm); text-align: center; font-size: .75rem; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; }
-    .step-done    { background: var(--primary-50); color: var(--primary-700); border: 1px solid var(--primary-100); }
-    .step-active  { background: var(--primary-600); color: white; }
+    .step-done    { background: var(--primary-50); color: var(--primary-600); border: 1px solid var(--primary-100); }
+    .step-active  { background: var(--primary-500); color: white; }
     .step-pending { background: var(--gray-50);  color: var(--gray-400); border: 1px solid var(--gray-100); }
 
     /* Info Boxes for Explanations */
-    .info-box { background: #f8fafc; border-left: 4px solid var(--primary-500); padding: 1rem 1.2rem; font-size: 0.95rem; color: var(--gray-600); margin-top: 1rem; border-radius: 0 8px 8px 0; line-height: 1.5; }
+    .info-box { background: #f0fdf4; border-left: 4px solid var(--primary-500); padding: 1rem 1.2rem; font-size: 0.95rem; color: var(--gray-700); margin-top: 1rem; border-radius: 0 8px 8px 0; line-height: 1.5; }
     .warn-box { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 1rem 1.2rem; font-size: 0.95rem; color: #92400e; margin-bottom: 1.5rem; }
-    
+
     .pred-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 2.5rem; text-align: center; }
+
     </style>
     """, unsafe_allow_html=True)
 
@@ -157,8 +162,9 @@ def load_and_clean_data():
     df = pd.read_csv("produk_tokopedia.csv")
 
     def prep_terjual(x):
-        if pd.isna(x): return 0
+        if pd.isna(x) or x == '': return 0
         t = str(x).lower().replace('terjual','').replace('+','').replace(' ','')
+        if not t: return 0
         if 'rb' in t:
             try: return int(float(t.replace('rb','')) * 1000)
             except: return 0
@@ -166,7 +172,7 @@ def load_and_clean_data():
             try: return int(float(t.replace('jt','')) * 1_000_000)
             except: return 0
         else:
-            try: return int(float(t))
+            try: return int(float(t)) if t else 0
             except: return 0
 
     def prep_ulasan(x):
@@ -197,7 +203,7 @@ def show_home():
     
     # --- HEADER / HERO SECTION ---
     st.markdown("""
-    <div style="background-color: #ffffff; padding: 2.5rem 0; border-bottom: 4px solid #16a34a; margin-bottom: 2.5rem;">
+    <div style="background-color: #ffffff; padding: 2.5rem 0; border-bottom: 4px solid #03ac0e; margin-bottom: 2.5rem;">
         <h1 style="margin: 0; font-size: 2.4rem; font-weight: 800; color: #111827; letter-spacing: -0.02em;">Machine Learning Pipeline</h1>
         <p style="margin: 0.5rem 0 0; font-size: 1.15rem; font-weight: 400; color: #4b5563;">Prediksi Penjualan Produk E-Commerce (Studi Kasus: Tokopedia)</p>
     </div>
@@ -205,7 +211,7 @@ def show_home():
 
     # --- SECTION 1: LATAR BELAKANG ---
     st.markdown("""
-    <div style="padding: 2rem; background: #fafafa; border-radius: 12px; border-left: 6px solid #16a34a; margin-bottom: 2rem;">
+    <div style="padding: 2rem; background: #f0fdf4; border-radius: 12px; border-left: 6px solid #03ac0e; margin-bottom: 2rem;">
         <h2 style="margin-top: 0; font-size: 1.3rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">Latar Belakang & Tujuan Proyek</h2>
         <p style="color: #4b5563; line-height: 1.6; margin-bottom: 1rem;">Aplikasi ini merupakan simulasi dari <b>End-to-End Machine Learning Pipeline</b> untuk menganalisis dan memprediksi performa penjualan produk. Sistem ini memfasilitasi ekstraksi fitur dari teks kotor, pemrosesan awal (preprocessing), hingga pelatihan algoritma secara interaktif (AutoML).</p>
         <p style="color: #4b5563; line-height: 1.6; margin: 0;">Tujuan utama sistem ini adalah membantu pengambilan keputusan bisnis dengan mengklasifikasikan apakah suatu produk memiliki potensi untuk menjadi <b>Best Seller</b> berdasarkan spesifikasi harga, rating, ulasan, dan metrik lainnya.</p>
@@ -214,15 +220,15 @@ def show_home():
 
     # --- SECTION 2: DEFINISI TARGET ---
     st.markdown("""
-    <div style="padding: 2rem; background: #fafafa; border-radius: 12px; border-left: 6px solid #22c55e; margin-bottom: 2rem;">
+    <div style="padding: 2rem; background: #f0fdf4; border-radius: 12px; border-left: 6px solid #42b549; margin-bottom: 2rem;">
         <h2 style="margin-top: 0; font-size: 1.3rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">Definisi Variabel Target</h2>
         <p style="color: #4b5563; line-height: 1.6; margin-bottom: 1.2rem;">Sistem ini menggunakan pendekatan <b>Klasifikasi Biner (Binary Classification)</b>:</p>
         <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <div style="background: #ffffff; padding: 1.2rem; border-radius: 8px; border: 1px solid #dcfce7;">
-                <strong style="color: #15803d; font-size: 1.1rem;">1 (Best Seller)</strong><br>
+            <div style="background: #ffffff; padding: 1.2rem; border-radius: 8px; border: 1px solid #bbf7d0;">
+                <strong style="color: #03ac0e; font-size: 1.1rem;">1 (Best Seller)</strong><br>
                 <span style="color: #4b5563; font-size: 0.95rem;">Volume penjualan produk berada pada persentil atas (Top 25% pasar). Menandakan produk yang sangat diminati konsumen.</span>
             </div>
-            <div style="background: #ffffff; padding: 1.2rem; border-radius: 8px; border: 1px solid #f3f4f6;">
+            <div style="background: #ffffff; padding: 1.2rem; border-radius: 8px; border: 1px solid #e5e7eb;">
                 <strong style="color: #374151; font-size: 1.1rem;">0 (Reguler)</strong><br>
                 <span style="color: #4b5563; font-size: 0.95rem;">Volume penjualan reguler atau berada di bawah ambang batas (threshold) rata-rata pasar.</span>
             </div>
@@ -232,7 +238,7 @@ def show_home():
 
     # --- SECTION 3: ALUR SISTEM ---
     st.markdown("""
-    <div style="padding: 2rem; background: #fafafa; border-radius: 12px; border-left: 6px solid #4ade80; margin-bottom: 2rem;">
+    <div style="padding: 2rem; background: #f0fdf4; border-radius: 12px; border-left: 6px solid #03ac0e; margin-bottom: 2rem;">
         <h2 style="margin-top: 0; font-size: 1.3rem; font-weight: 700; color: #111827; margin-bottom: 1.2rem;">Alur Sistem (Workflow)</h2>
         <div style="display: flex; flex-direction: column; gap: 0.8rem; color: #4b5563;">
             <div><b style="color: #111827;">1. EDA (Exploratory Data Analysis)</b> — Eksplorasi data dan analisis awal</div>
@@ -285,12 +291,12 @@ def show_eda():
 
     if uni_plot == "Histogram":
         fig_u = px.histogram(df, x=uni_feat, color='is_bestseller', barmode='overlay', opacity=0.7,
-                             color_discrete_map={0:"#94a3b8", 1:"#16a34a"}, labels={'is_bestseller':'Kelas Target'})
+                             color_discrete_map={0:"#94a3b8", 1:"#03ac0e"}, labels={'is_bestseller':'Kelas Target'})
         st.plotly_chart(fig_u, use_container_width=True)
         st.markdown('<div class="info-box"><b>Interpretasi Histogram:</b> Grafik ini menunjukkan sebaran frekuensi data. Distribusi yang menumpuk di satu sisi menunjukkan adanya *skewness* (kemiringan), yang mengindikasikan bahwa sebagian besar produk berada pada rentang nilai tersebut.</div>', unsafe_allow_html=True)
     else:
         fig_u = px.box(df, x=df['is_bestseller'].astype(str), y=uni_feat, color=df['is_bestseller'].astype(str),
-                       color_discrete_map={"0":"#94a3b8","1":"#16a34a"}, labels={'x':'Kelas Target'})
+                       color_discrete_map={"0":"#94a3b8","1":"#03ac0e"}, labels={'x':'Kelas Target'})
         st.plotly_chart(fig_u, use_container_width=True)
         st.markdown('<div class="info-box"><b>Interpretasi Boxplot:</b> Grafik ini berguna untuk melihat nilai median serta mengidentifikasi keberadaan *outlier*. Perbedaan posisi kotak antar kelas menunjukkan bahwa fitur ini mungkin berpengaruh kuat terhadap target klasifikasi.</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
@@ -303,7 +309,7 @@ def show_eda():
     sumbu_y = col_b2.selectbox("Variabel Sumbu Y:", ['Terjual_bersih'] + num_cols, index=0)
     
     fig_b = px.scatter(df, x=sumbu_x, y=sumbu_y, color=df['is_bestseller'].astype(str),
-                       color_discrete_map={"0":"#cbd5e1","1":"#16a34a"}, opacity=0.7)
+                       color_discrete_map={"0":"#cbd5e1","1":"#03ac0e"}, opacity=0.7)
     st.plotly_chart(fig_b, use_container_width=True)
     st.markdown('<div class="info-box"><b>Interpretasi Scatter Plot:</b> Membantu memvisualisasikan korelasi atau pola hubungan antara dua variabel. Jika titik-titik hijau (Best Seller) membentuk klaster di area tertentu, ini menunjukkan adanya pola kuat yang dapat dipelajari oleh model.</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
@@ -312,7 +318,7 @@ def show_eda():
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown('<div class="section-title">Matriks Korelasi (Heatmap)</div>', unsafe_allow_html=True)
     corr = df[num_cols + ['is_bestseller']].corr()
-    fig_h = px.imshow(corr, text_auto=".2f", aspect="auto", color_continuous_scale='Greens')
+    fig_h = px.imshow(corr, text_auto=".2f", aspect="auto", color_continuous_scale=[(0, '#f0fdf4'), (0.5, '#86efac'), (1, '#03ac0e')])
     st.plotly_chart(fig_h, use_container_width=True)
     st.markdown('<div class="info-box"><b>Interpretasi Heatmap Korelasi:</b> Angka yang mendekati 1.00 atau -1.00 menandakan korelasi linear yang kuat. Variabel yang memiliki korelasi tinggi terhadap "is_bestseller" adalah fitur yang paling krusial.</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
@@ -373,7 +379,7 @@ def show_preprocessing():
             'y_train': y_train.reset_index(drop=True), 'y_test': y_test.reset_index(drop=True)
         }
         st.session_state['scaler'] = scaler
-        st.session_state['preprocessing_done'] = True 
+        st.session_state['preprocessing_done'] = True
         st.success("Pemrosesan data telah selesai.")
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -433,7 +439,7 @@ def show_model():
             st.session_state['model_name'] = model_choice
             st.session_state['model_trained'] = True
             status.update(label="Pelatihan selesai.", state="complete", expanded=False)
-        
+
         st.success(f"Model {model_choice} telah berhasil dilatih dan disimpan ke dalam sesi memori.")
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -473,7 +479,7 @@ def show_evaluation():
         with col1:
             st.markdown('<br><div class="section-title">Matriks Kebingungan (Confusion Matrix)</div>', unsafe_allow_html=True)
             cm = confusion_matrix(y_test, y_pred)
-            fig_cm = px.imshow(cm, text_auto=True, color_continuous_scale='Greens', x=["Reguler", "Best Seller"], y=["Reguler", "Best Seller"])
+            fig_cm = px.imshow(cm, text_auto=True, color_continuous_scale=[(0, '#f0fdf4'), (0.5, '#86efac'), (1, '#03ac0e')], x=["Reguler", "Best Seller"], y=["Reguler", "Best Seller"])
             st.plotly_chart(fig_cm, use_container_width=True)
             st.markdown('<div class="info-box"><b>Interpretasi:</b> Diagonal utama adalah prediksi yang tepat (True Positives & Negatives). Kotak di luar diagonal menunjukkan jumlah prediksi yang meleset.</div>', unsafe_allow_html=True)
 
@@ -481,7 +487,7 @@ def show_evaluation():
         with col2:
             st.markdown('<br><div class="section-title">Kurva ROC-AUC</div>', unsafe_allow_html=True)
             fpr, tpr, _ = roc_curve(y_test, y_proba)
-            fig_roc = go.Figure(go.Scatter(x=fpr, y=tpr, mode='lines', fill='tozeroy', name=f"AUC = {auc(fpr, tpr):.3f}", line=dict(color="#16a34a")))
+            fig_roc = go.Figure(go.Scatter(x=fpr, y=tpr, mode='lines', fill='tozeroy', name=f"AUC = {auc(fpr, tpr):.3f}", line=dict(color="#03ac0e")))
             fig_roc.add_shape(type='line', x0=0, x1=1, y0=0, y1=1, line=dict(color="gray", dash="dash"))
             st.plotly_chart(fig_roc, use_container_width=True)
             st.markdown('<div class="info-box"><b>Interpretasi:</b> Semakin kurva hijau melengkung ke arah sudut kiri atas (AUC mendekati 1.00), semakin baik model dalam membedakan antara kedua kelas.</div>', unsafe_allow_html=True)
@@ -490,7 +496,7 @@ def show_evaluation():
         st.markdown('<br><div class="section-title">Signifikansi Variabel (Feature Importance)</div>', unsafe_allow_html=True)
         importances = model.feature_importances_
         df_imp = pd.DataFrame({"Fitur": X_test.columns, "Kepentingan": importances}).sort_values(by="Kepentingan", ascending=True)
-        fig_imp = px.bar(df_imp, x="Kepentingan", y="Fitur", orientation='h', color_discrete_sequence=['#16a34a'])
+        fig_imp = px.bar(df_imp, x="Kepentingan", y="Fitur", orientation='h', color_discrete_sequence=['#03ac0e'])
         st.plotly_chart(fig_imp, use_container_width=True)
         st.markdown('<div class="info-box"><b>Interpretasi:</b> Menampilkan kontribusi tiap variabel. Semakin panjang batang suatu fitur, semakin besar bobotnya dalam keputusan klasifikasi yang dilakukan oleh algoritma.</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
@@ -545,7 +551,7 @@ def show_testing():
         
         pred_label = "BEST SELLER" if pred == 1 else "REGULER"
         confidence = max(proba) * 100
-        color = "#16a34a" if pred == 1 else "#4b5563"
+        color = "#03ac0e" if pred == 1 else "#4b5563"
         
         st.markdown("<hr style='margin: 2rem 0; border: 1px solid #e5e7eb;'>", unsafe_allow_html=True)
         st.markdown(f"""
@@ -566,7 +572,7 @@ def main():
 
     st.sidebar.markdown("<br>", unsafe_allow_html=True)
     menu = ["Home", "EDA", "Preprocessing", "Model", "Evaluation", "Testing"]
-    choice = st.sidebar.radio("Navigasi Utama", menu, key="current_page", label_visibility="collapsed")
+    choice = st.sidebar.radio("", menu, key="current_page", label_visibility="collapsed")
 
     st.sidebar.markdown("<br>", unsafe_allow_html=True)
     if st.sidebar.button("Reset Sistem", use_container_width=True):
