@@ -1,46 +1,56 @@
-# E-Commerce Best Seller Prediction App
-
-![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
-![Streamlit](https://img.shields.io/badge/Streamlit-App-red.svg)
-![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Machine%20Learning-orange.svg)
-![Pandas](https://img.shields.io/badge/Pandas-Data%20Processing-yellow.svg)
+# E-Commerce Bestseller Prediction (Tokopedia)
 
 ## Project Overview
-This project is an **End-to-End Machine Learning** application designed to help e-commerce sellers and store managers predict the probability of a product becoming a *Best Seller*. 
+This project is a Machine Learning classification system designed to predict whether an e-commerce product (Tokopedia) has the potential to become a **Bestseller** based on its metadata. 
 
-Instead of relying on guesswork for pricing and discount strategies, this application leverages a **Random Forest Classifier** trained on real-world Tokopedia product data. It provides users with data-driven predictions and actionable business insights to maximize sales potential.
+The primary goal of this project is to provide actionable **Business Value** for e-commerce platforms and sellers to:
+1. **Inventory Management:** Identify high-potential products early to prevent out-of-stock scenarios.
+2. **Marketing Optimization:** Filter out underperforming products and accurately select items worthy of promotional campaigns (featured products).
+3. **Strategic Insights:** Understand the actual driving factors behind e-commerce sales.
 
-**Definition of "Best Seller" in this model:** A product that has sold **> 250 pieces**, which represents the top 25% (75th percentile) of the highest-performing products in the dataset.
+## Dataset & Target Definition
+* **Data Source:** Scraped Tokopedia product data containing **~29,500 products**.
+* **Target Variable:** `is_bestseller`. Defined as products in the top 25% of sales volume (Threshold: > 250 units sold).
+* **Data Characteristics:** The dataset has a class imbalance ratio of roughly 3:1 (76% Regular : 24% Bestseller).
 
-## Key Features
-This interactive web application (built with Streamlit) offers three main features:
-1. **New Product Simulation:** Calculates the probability of success for unlaunched products by allowing users to simulate various Pricing and Discount strategies (assuming zero reviews/ratings).
-2. **Existing Product Analysis:** Analyzes the metrics of currently active products (including actual Ratings and Review counts) to provide optimization recommendations.
-3. **Automated Business Consultant:** Generates specific, rule-based text recommendations tailored to the user's input (e.g., suggesting a higher discount rate if the base price exceeds a psychological threshold like Rp 500,000).
+## Key Business Insights
+Through data exploration and Model Feature Importance, two crucial business insights were discovered:
 
-## Machine Learning Pipeline (main.ipynb)
-This project encompasses the full data science lifecycle:
-* **Data Collection:** Utilized a dataset containing **29,519 rows** of scraped Tokopedia e-commerce product data.
-* **Data Cleaning & Preprocessing:** * Extracted pure numerical values from messy text formats (e.g., converting "1rb+ terjual" into `1000`, handling "jt" for millions).
-  * Handled missing values (`NaN`) by filling them with appropriate numerical defaults.
-  * Applied outlier removal on price distributions by clipping the 1st and 99th percentiles, resulting in a clean **28,929 rows** of data.
-* **Feature Engineering:** Developed new predictive features reflecting buyer psychology:
-  * `Harga_setelah_diskon` (Effective Price)
-  * `Ada_diskon` (Boolean: 1 if discount > 0, else 0)
-  * `Skor_kepercayaan` (Trust Score: An interaction term between Rating and Clean Review Count).
-* **Modeling:** Trained a **Random Forest Classifier** with balanced class weights to handle imbalanced best-seller target data.
-* **Performance:** The model was evaluated using **5-Fold Cross-Validation** to ensure reliability. It achieved an excellent **ROC-AUC Score of 0.889 ± 0.008**. The top contributing features identified by the model were `Rating` and `Harga_setelah_diskon`.
+1. **The Discount Paradox:** Although widely considered the main driver of sales, *Discount Percentage* only accounts for ~5.4% of the model's decision-making. The dominant factor (73%) actually comes from *Social Proof* (Rating and Review Volume).
+2. **The Strict Gatekeeper:** The model naturally acts as a conservative gatekeeper. It prefers to miss out on some potential products (False Negatives) rather than falsely recommending the wrong products (False Positives), thereby minimizing wasted marketing budgets.
+
+## Technical Workflow & Feature Engineering
+1. **Data Cleaning:** Transformed messy text data in the sales column (e.g., "1rb+ terjual", "1jt", or typos like "tebatas") into pure numeric formats.
+2. **Feature Engineering (Core):** Engineered a custom variable called **`Trust_Score`** (calculated as `Rating` x `Number of Reviews`). This feature proved to be the #1 predictor in detecting top-tier products.
+3. **Data Preprocessing:** Handled extreme price outliers using `RobustScaler` and addressed the imbalanced target variable using `class_weight='balanced'`.
+4. **Modeling:** Evaluated and compared state-of-the-art algorithms, specifically Logistic Regression, Random Forest, and XGBoost.
+
+## Model Performance
+**Random Forest** was selected as the final model due to its high and stable evaluation metrics:
+
+| Metric | Score | Interpretation |
+|---|---|---|
+| **ROC-AUC** | 0.905 | **Excellent**. The model has a very strong discriminative ability to separate bestsellers from regular products. |
+| **Accuracy** | 83.5% | Overall classification accuracy across the test set. |
+| **Recall** | 79.0% | The model successfully identifies roughly 8 out of 10 actual bestsellers. |
+| **Precision** | 61.0% | Acceptable precision rate considering the initial heavy class imbalance (24% baseline). |
+
+*(Note: The trained model has been exported to a `.pickle` file and is ready to be integrated into a Streamlit dashboard for real-time predictions).*
 
 ## Tech Stack
-* **Programming Language:** Python
+* **Language:** Python 3
 * **Data Manipulation:** Pandas, NumPy
-* **Machine Learning:** Scikit-Learn
-* **Model Serialization:** Pickle
-* **Web App GUI:** Streamlit
+* **Machine Learning:** Scikit-Learn, XGBoost
+* **Data Visualization:** Matplotlib, Seaborn
+* **Deployment:** Streamlit (Pending)
 
-## How to Run Locally
+## File Structure
+* `main.ipynb`: The main notebook containing EDA, Preprocessing, Model Training, and Evaluation.
+* `produk_tokopedia.csv`: The original dataset.
+* `model_bestseller.pickle`: The exported, deployment-ready Machine Learning model.
 
-1. **Clone this repository**
-   ```bash
-   git clone [https://github.com/lewron135/ML-Tokopedia-Best-Seller.git](https://github.com/lewron135/ML-Tokopedia-Best-Seller.git)
-   cd ML-Tokopedia-Best-Seller
+## Future Work / Next Steps
+To further improve the model's precision and business utility, the following steps are planned:
+1. **Decision Threshold Tuning:** Manually adjusting the probability threshold (e.g., from 0.5 to 0.65) to heavily increase Precision for stricter promotional filtering.
+2. **NLP on Product Names:** Utilizing TF-IDF or CountVectorizer to extract high-converting keywords (e.g., "Premium", "Original", "Promo") from the product titles.
+3. **Adding Store Reputation Features:** Integrating seller metadata (e.g., Official Store / Power Merchant status) as this creates a strong buyer bias in real-world scenarios.
