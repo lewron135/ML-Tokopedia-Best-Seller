@@ -54,3 +54,9 @@ To further improve the model's precision and business utility, the following ste
 1. **Decision Threshold Tuning:** Manually adjusting the probability threshold (e.g., from 0.5 to 0.65) to heavily increase Precision for stricter promotional filtering.
 2. **NLP on Product Names:** Utilizing TF-IDF or CountVectorizer to extract high-converting keywords (e.g., "Premium", "Original", "Promo") from the product titles.
 3. **Adding Store Reputation Features:** Integrating seller metadata (e.g., Official Store / Power Merchant status) as this creates a strong buyer bias in real-world scenarios.
+
+## Author
+- Josep Natael Pasaribu
+- Mark Lengkong
+- Michelle Pricillia
+- Marcellino Varian Saputra
