@@ -209,6 +209,16 @@ def show_home():
     </div>
     """, unsafe_allow_html=True)
 
+    # --- NEW: AUTHOR / CONTRIBUTOR SECTION ---
+    st.markdown("""
+    <div style="padding: 1rem 1.5rem; background: #ffffff; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 15px;">
+        <div style="background: #03ac0e; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;">AUTHORS</div>
+        <div style="font-size: 1rem; color: #111827; font-weight: 600;">
+            Josep Natanael Pasaribu &nbsp;•&nbsp; Mark Philip Lengkong &nbsp;•&nbsp; Michelle Pricillia
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
     # --- SECTION 1: LATAR BELAKANG ---
     st.markdown("""
     <div style="padding: 2rem; background: #f0fdf4; border-radius: 12px; border-left: 6px solid #03ac0e; margin-bottom: 2rem;">
@@ -418,7 +428,21 @@ def show_model():
         n_est = col1.select_slider("n_estimators", options=[50, 100, 150, 200], value=100)
         lr = col1.selectbox("learning_rate", [0.01, 0.05, 0.1, 0.2])
         m_depth = col2.slider("max_depth", 2, 10, 5)
-        model = XGBClassifier(n_estimators=n_est, learning_rate=lr, max_depth=m_depth, random_state=42, eval_metric='logloss')
+        
+        # --- MULAI PERBAIKAN IMBALANCED DATA ---
+        y_train_temp = st.session_state['preprocessed_data']['y_train']
+        ratio = float(np.sum(y_train_temp == 0)) / np.sum(y_train_temp == 1)
+        
+        model = XGBClassifier(
+            n_estimators=n_est, 
+            learning_rate=lr, 
+            max_depth=m_depth, 
+            random_state=42, 
+            eval_metric='logloss',
+            scale_pos_weight=ratio  # INI OBAT AJAIBNYA!
+        )
+        # --- SELESAI PERBAIKAN ---
+        
     else:
         c_val = col1.selectbox("Regularization (C)", [0.01, 0.1, 1.0, 10.0])
         m_iter = col2.select_slider("max_iter", options=[100, 200, 500], value=100)
@@ -442,7 +466,6 @@ def show_model():
 
         st.success(f"Model {model_choice} telah berhasil dilatih dan disimpan ke dalam sesi memori.")
     st.markdown('</div>', unsafe_allow_html=True)
-
 # ─────────────────────────────────────────────
 # 6. EVALUATION
 # ─────────────────────────────────────────────
