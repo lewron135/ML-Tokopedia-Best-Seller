@@ -197,66 +197,86 @@ def load_and_clean_data():
     return df, THRESHOLD
 
 # ─────────────────────────────────────────────
-# 2. HOME
+# 1. ABOUT PAGE (Project Identity & Documentation)
 # ─────────────────────────────────────────────
-def show_home():
+def show_about():
+    # --- HEADER SECTION ---
+    st.markdown("""
+    <div style="background-color: #ffffff; padding: 3rem 0; border-bottom: 5px solid #03ac0e; margin-bottom: 2rem;">
+        <h1 style="margin: 0; font-size: 2.8rem; font-weight: 800; color: #111827; letter-spacing: -0.02em; text-align: center;">About the Project</h1>
+        <p style="margin: 0.5rem 0 0; font-size: 1.3rem; font-weight: 400; color: #4b5563; text-align: center;">E-Commerce Bestseller Prediction System</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# --- AUTHORS ---
+    st.subheader("The Development Team")
+    cols = st.columns(3)
     
-    # --- HEADER / HERO SECTION ---
-    st.markdown("""
-    <div style="background-color: #ffffff; padding: 2.5rem 0; border-bottom: 4px solid #03ac0e; margin-bottom: 2.5rem;">
-        <h1 style="margin: 0; font-size: 2.4rem; font-weight: 800; color: #111827; letter-spacing: -0.02em;">Machine Learning Pipeline</h1>
-        <p style="margin: 0.5rem 0 0; font-size: 1.15rem; font-weight: 400; color: #4b5563;">Prediksi Penjualan Produk E-Commerce (Studi Kasus: Tokopedia)</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # --- NEW: AUTHOR / CONTRIBUTOR SECTION ---
-    st.markdown("""
-    <div style="padding: 1rem 1.5rem; background: #ffffff; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 15px;">
-        <div style="background: #03ac0e; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;">AUTHORS</div>
-        <div style="font-size: 1rem; color: #111827; font-weight: 600;">
-            Josep Natanael Pasaribu &nbsp;•&nbsp; Mark Philip Lengkong &nbsp;•&nbsp; Michelle Pricillia
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # --- SECTION 1: LATAR BELAKANG ---
-    st.markdown("""
-    <div style="padding: 2rem; background: #f0fdf4; border-radius: 12px; border-left: 6px solid #03ac0e; margin-bottom: 2rem;">
-        <h2 style="margin-top: 0; font-size: 1.3rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">Latar Belakang & Tujuan Proyek</h2>
-        <p style="color: #4b5563; line-height: 1.6; margin-bottom: 1rem;">Aplikasi ini merupakan simulasi dari <b>End-to-End Machine Learning Pipeline</b> untuk menganalisis dan memprediksi performa penjualan produk. Sistem ini memfasilitasi ekstraksi fitur dari teks kotor, pemrosesan awal (preprocessing), hingga pelatihan algoritma secara interaktif (AutoML).</p>
-        <p style="color: #4b5563; line-height: 1.6; margin: 0;">Tujuan utama sistem ini adalah membantu pengambilan keputusan bisnis dengan mengklasifikasikan apakah suatu produk memiliki potensi untuk menjadi <b>Best Seller</b> berdasarkan spesifikasi harga, rating, ulasan, dan metrik lainnya.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # --- SECTION 2: DEFINISI TARGET ---
-    st.markdown("""
-    <div style="padding: 2rem; background: #f0fdf4; border-radius: 12px; border-left: 6px solid #42b549; margin-bottom: 2rem;">
-        <h2 style="margin-top: 0; font-size: 1.3rem; font-weight: 700; color: #111827; margin-bottom: 1rem;">Definisi Variabel Target</h2>
-        <p style="color: #4b5563; line-height: 1.6; margin-bottom: 1.2rem;">Sistem ini menggunakan pendekatan <b>Klasifikasi Biner (Binary Classification)</b>:</p>
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <div style="background: #ffffff; padding: 1.2rem; border-radius: 8px; border: 1px solid #bbf7d0;">
-                <strong style="color: #03ac0e; font-size: 1.1rem;">1 (Best Seller)</strong><br>
-                <span style="color: #4b5563; font-size: 0.95rem;">Volume penjualan produk berada pada persentil atas (Top 25% pasar). Menandakan produk yang sangat diminati konsumen.</span>
+    # Hapus bagian "role" dari sini
+    authors = [
+        {"name": "Josep Natanael Pasaribu", "id": "2802486583"},
+        {"name": "Michelle Pricillia", "id": "2802457652"},
+        {"name": "Mark Philip Lengkong", "id": "2802491715"}
+    ]
+    
+    for i, author in enumerate(authors):
+        with cols[i]:
+            # Hapus juga baris HTML yang memanggil author['role']
+            st.markdown(f"""
+            <div style="padding: 1.5rem; background: #ffffff; border-radius: 15px; border: 1px solid #e5e7eb; text-align: center; height: 100%;">
+                <div style="font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem;">{author['name']}</div>
+                <div style="font-size: 0.9rem; color: #03ac0e; font-weight: 600;">{author['id']}</div>
             </div>
-            <div style="background: #ffffff; padding: 1.2rem; border-radius: 8px; border: 1px solid #e5e7eb;">
-                <strong style="color: #374151; font-size: 1.1rem;">0 (Reguler)</strong><br>
-                <span style="color: #4b5563; font-size: 0.95rem;">Volume penjualan reguler atau berada di bawah ambang batas (threshold) rata-rata pasar.</span>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
 
-    # --- SECTION 3: ALUR SISTEM ---
+    st.markdown("---")
+
+    # --- SECTION 2: PROJECT OVERVIEW ---
+    col_left, col_right = st.columns([2, 1])
+    
+    with col_left:
+        st.markdown("""
+        ### Project Overview
+        Aplikasi ini dikembangkan untuk menjawab tantangan krusial di dunia e-commerce: **Bagaimana mengidentifikasi produk unggulan di tengah jutaan pilihan?** Menggunakan data dari platform **Tokopedia** (29.000+ produk), sistem ini mampu menganalisis pola penjualan dan metadata produk untuk memprediksi apakah sebuah produk akan menjadi *Bestseller* atau tidak. Ini bukan sekadar alat prediksi, melainkan sebuah sistem pendukung keputusan bagi pemilik bisnis untuk mengoptimalkan stok dan strategi pemasaran.
+        """)
+    
+    with col_right:
+        st.info("""
+        **Project Milestones:**
+        - Data Scraping & Cleaning
+        - Advanced Feature Engineering
+        - Model Training & Tuning
+        - Dashboard Deployment
+        """)
+
+    # --- SECTION 3: THE MACHINE LEARNING BRAIN ---
+    st.markdown("### The Machine Learning Brain")
+    st.write("""
+    Di balik layar, aplikasi ini menggunakan algoritma **Ensemble Learning** (Random Forest & XGBoost). Berbeda dengan algoritma linear biasa, model ini bekerja dengan cara membangun ribuan 'pohon keputusan' yang bekerja sama untuk menghasilkan prediksi paling akurat.
+    """)
+    
+    ml_cols = st.columns(2)
+    with ml_cols[0]:
+        st.success("""
+        **Kenapa Random Forest?**
+        Algoritma ini sangat tangguh terhadap data e-commerce yang memiliki rentang harga yang ekstrim (*outliers*) dan mampu menangani hubungan antar fitur yang kompleks tanpa kehilangan akurasi.
+        """)
+    with ml_cols[1]:
+        st.success("""
+        **The Power of ROC-AUC 0.90**
+        Model kami memiliki skor ROC-AUC sebesar 0.90, yang masuk dalam kategori **Excellent**. Artinya, model memiliki akurasi 90% dalam membedakan produk potensial dari produk biasa.
+        """)
+
+    # --- SECTION 4: DID YOU KNOW? (INSIGHTS) ---
+    st.markdown("### Did You Know?")
+    st.warning("""
+    **The Discount Paradox:** Berdasarkan analisis kami, diskon besar ternyata hanya menyumbang **5%** terhadap keberhasilan produk menjadi Bestseller. Kunci utamanya adalah **Trust Score** (Rating & Jumlah Ulasan) yang menyumbang lebih dari **70%** prediksi. Konsumen e-commerce lebih memilih produk yang terpercaya daripada sekadar produk yang murah.
+    """)
+
+    # --- SECTION 5: TECH STACK ---
     st.markdown("""
-    <div style="padding: 2rem; background: #f0fdf4; border-radius: 12px; border-left: 6px solid #03ac0e; margin-bottom: 2rem;">
-        <h2 style="margin-top: 0; font-size: 1.3rem; font-weight: 700; color: #111827; margin-bottom: 1.2rem;">Alur Sistem (Workflow)</h2>
-        <div style="display: flex; flex-direction: column; gap: 0.8rem; color: #4b5563;">
-            <div><b style="color: #111827;">1. EDA (Exploratory Data Analysis)</b> — Eksplorasi data dan analisis awal</div>
-            <div><b style="color: #111827;">2. Preprocessing</b> — Cleaning, splitting, dan scaling data</div>
-            <div><b style="color: #111827;">3. Model Training</b> — Melatih model Machine Learning</div>
-            <div><b style="color: #111827;">4. Evaluation</b> — Mengukur performa model</div>
-            <div><b style="color: #111827;">5. Testing</b> — Prediksi data simulasi bisnis</div>
-        </div>
+    <div style="text-align: center; margin-top: 3rem; padding: 1rem; color: #9ca3af; font-size: 0.85rem;">
+        Built with Python • Pandas • Scikit-Learn • XGBoost • Streamlit
     </div>
     """, unsafe_allow_html=True)
 
@@ -594,7 +614,7 @@ def main():
     if 'current_page' not in st.session_state: st.session_state['current_page'] = "Home"
 
     st.sidebar.markdown("<br>", unsafe_allow_html=True)
-    menu = ["Home", "EDA", "Preprocessing", "Model", "Evaluation", "Testing"]
+    menu = ["About Project", "EDA", "Preprocessing", "Model", "Evaluation", "Testing"]
     choice = st.sidebar.radio("", menu, key="current_page", label_visibility="collapsed")
 
     st.sidebar.markdown("<br>", unsafe_allow_html=True)
@@ -602,7 +622,7 @@ def main():
         st.session_state.clear()
         st.rerun()
 
-    if choice == "Home": show_home()
+    if choice == "About Project": show_about()
     elif choice == "EDA": show_eda()
     elif choice == "Preprocessing": show_preprocessing()
     elif choice == "Model": show_model()
