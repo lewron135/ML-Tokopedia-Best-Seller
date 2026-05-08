@@ -59,4 +59,3 @@ To further improve the model's precision and business utility, the following ste
 - Josep Natael Pasaribu
 - Mark Lengkong
 - Michelle Pricillia
-- Marcellino Varian Saputra
