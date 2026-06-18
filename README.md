@@ -55,6 +55,9 @@ To further improve the model's precision and business utility, the following ste
 2. **NLP on Product Names:** Utilizing TF-IDF or CountVectorizer to extract high-converting keywords (e.g., "Premium", "Original", "Promo") from the product titles.
 3. **Adding Store Reputation Features:** Integrating seller metadata (e.g., Official Store / Power Merchant status) as this creates a strong buyer bias in real-world scenarios.
 
+## App Demo
+Link: https://drive.google.com/file/d/1yXIDesopuEAefZ7pno5qzL7t6OSLSC0G/view?usp=sharing
+
 ## Author
 - Josep Natael Pasaribu
 - Mark Lengkong
